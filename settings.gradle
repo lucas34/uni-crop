@@ -1,0 +1,5 @@
+include ':sample'
+project(':sample').projectDir = new File('sample')
+
+include ':unicrop'
+project(':unicrop').projectDir = new File('library')

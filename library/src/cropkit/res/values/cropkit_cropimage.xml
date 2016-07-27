@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="cropkit_highlight_horizontal" type="id"/>
+    <item name="cropkit_highlight_vertical" type="id"/>
+    <item name="cropkit_highlight_diagonal" type="id"/>
+
+    <attr name="cropKitStyle" format="reference"/>
+
+    <declare-styleable name="CropImageView">
+        <attr name="cropKitHighlight" format="reference"/>
+        <attr name="cropKitAspectX" format="integer"/>
+        <attr name="cropKitAspectY" format="integer"/>
+        <attr name="cropKitCircleCrop" format="boolean"/>
+        <attr name="cropKitDetectFace" format="boolean"/>
+    </declare-styleable>
+</resources>

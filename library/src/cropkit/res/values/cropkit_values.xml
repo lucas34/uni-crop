@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="cropkit" type="id"/>
+    <dimen name="cropkit_25dp">45dp</dimen>
+</resources>

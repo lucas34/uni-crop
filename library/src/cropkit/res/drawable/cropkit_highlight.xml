@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@id/cropkit_highlight_diagonal"
+        android:drawable="@drawable/ic_cropkit_highlight_diagonal"/>
+    <item
+        android:id="@id/cropkit_highlight_horizontal"
+        android:drawable="@drawable/ic_cropkit_highlight_horizontal"/>
+    <item
+        android:id="@id/cropkit_highlight_vertical"
+        android:drawable="@drawable/ic_cropkit_highlight_vertical"/>
+</layer-list>
