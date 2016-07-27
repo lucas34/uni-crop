@@ -108,7 +108,7 @@ public final class CropTask {
                     }
 
                     @Override public void onCropFailure(@NonNull Throwable t) {
-                        bitmapAsyncEmitter.onCompleted();
+                        bitmapAsyncEmitter.onError(t);
                     }
                 }).execute();
             }
