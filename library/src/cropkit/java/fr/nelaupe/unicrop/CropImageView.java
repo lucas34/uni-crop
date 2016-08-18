@@ -164,7 +164,7 @@ public class CropImageView extends ImageViewTouchBase
             mWaitingToPick = true;
             center(true, true);
 
-            Observable.fromCallable(new FaceDetectorTask(this)).subscribe(new Action1<List<HighlightView>>() {
+            Observable.fromCallable(new FaceDetectorTask(this)).forEach(new Action1<List<HighlightView>>() {
                 @Override
                 public void call(List<HighlightView> views) {
                     mWaitingToPick = views.size() > 1;
