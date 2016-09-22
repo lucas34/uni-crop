@@ -116,7 +116,7 @@ public final class CropTask {
 
     }
 
-    private static File getFile(Context context, Uri uri) {
+    public static File getFile(Context context, Uri uri) {
         if (uri != null) {
             String path = getPath(context, uri);
             if (path != null && isLocal(path)) {
