@@ -19,7 +19,6 @@ import com.yalantis.ucrop.model.ExifInfo;
 import com.yalantis.ucrop.model.ImageState;
 import com.yalantis.ucrop.task.BitmapCropTask;
 import com.yalantis.ucrop.util.BitmapLoadUtils;
-import com.yalantis.ucrop.util.FileUtils;
 
 import java.io.File;
 
@@ -29,6 +28,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 import static android.content.ContentValues.TAG;
+import static com.yalantis.ucrop.util.FileUtils.getPath;
 
 /**
  * Created with IntelliJ
@@ -100,10 +100,10 @@ public final class CropTask {
             @Override
             public void call(final AsyncEmitter<File> bitmapAsyncEmitter) {
                 final ImageState imageState = new ImageState(cropRect, currentImageRect, 1, 0);
-                final CropParameters cropParameters = new CropParameters(0, 0, format, 90, FileUtils.getPath(context, inputUri), FileUtils.getPath(context, outputUri), exifInfo);
+                final CropParameters cropParameters = new CropParameters(0, 0, format, 90, getPath(context, inputUri), getPath(context, outputUri), exifInfo);
                 new BitmapCropTask(bitmap, imageState, cropParameters, new BitmapCropCallback() {
-                    @Override public void onBitmapCropped(@NonNull Uri resultUri) {
-                        bitmapAsyncEmitter.onNext(FileUtils.getFile(context, outputUri));
+                    @Override public void onBitmapCropped(@NonNull Uri resultUri, int imageWidth, int imageHeight) {
+                        bitmapAsyncEmitter.onNext(getFile(context, outputUri));
                         bitmapAsyncEmitter.onCompleted();
                     }
 
@@ -114,6 +114,23 @@ public final class CropTask {
             }
         }, AsyncEmitter.BackpressureMode.NONE);
 
+    }
+
+    private static File getFile(Context context, Uri uri) {
+        if (uri != null) {
+            String path = getPath(context, uri);
+            if (path != null && isLocal(path)) {
+                return new File(path);
+            }
+        }
+        return null;
+    }
+
+    public static boolean isLocal(String url) {
+        if (url != null && !url.startsWith("http://") && !url.startsWith("https://")) {
+            return true;
+        }
+        return false;
     }
 
 }
