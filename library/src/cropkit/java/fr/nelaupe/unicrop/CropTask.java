@@ -58,7 +58,7 @@ public final class CropTask {
     }
 
     public static Observable<Bitmap> decode(final Context context, final Uri imageUri) {
-        return Observable.fromAsync(new Action1<AsyncEmitter<Bitmap>>() {
+        return Observable.fromEmitter(new Action1<AsyncEmitter<Bitmap>>() {
             @Override public void call(final AsyncEmitter<Bitmap> decodeAsyncEmitter) {
                 int maxBitmapSize = BitmapLoadUtils.calculateMaxBitmapSize(context);
                 BitmapLoadUtils.decodeBitmapInBackground(context, imageUri, imageUri, maxBitmapSize, maxBitmapSize, new BitmapLoadCallback() {
@@ -78,7 +78,7 @@ public final class CropTask {
     }
 
     private static Observable<ExifInfo> decodeExif(final Context context, final Uri imageUri, final Uri outputUri) {
-        return Observable.fromAsync(new Action1<AsyncEmitter<ExifInfo>>() {
+        return Observable.fromEmitter(new Action1<AsyncEmitter<ExifInfo>>() {
             @Override public void call(final AsyncEmitter<ExifInfo> exifInfoAsyncEmitter) {
                 final int maxBitmapSize = BitmapLoadUtils.calculateMaxBitmapSize(context);
                 BitmapLoadUtils.decodeBitmapInBackground(context, imageUri, outputUri, maxBitmapSize, maxBitmapSize, new BitmapLoadCallback() {
@@ -96,7 +96,7 @@ public final class CropTask {
     }
 
     private static Observable<File> doCrop(final Context context, final Bitmap bitmap, final RectF cropRect, final RectF currentImageRect, final Bitmap.CompressFormat format, final Uri inputUri, final Uri outputUri, final ExifInfo exifInfo) {
-        return Observable.fromAsync(new Action1<AsyncEmitter<File>>() {
+        return Observable.fromEmitter(new Action1<AsyncEmitter<File>>() {
             @Override
             public void call(final AsyncEmitter<File> bitmapAsyncEmitter) {
                 final ImageState imageState = new ImageState(cropRect, currentImageRect, 1, 0);
