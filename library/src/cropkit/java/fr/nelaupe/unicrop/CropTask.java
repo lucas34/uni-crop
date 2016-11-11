@@ -37,12 +37,8 @@ import static com.yalantis.ucrop.util.FileUtils.getPath;
  */
 public final class CropTask {
 
-    public static Observable<File> crop(final Context context, CropKitParams params, final CropImageView info) {
-        return crop(context, params.inputUri, params.outputUri, params.format, info);
-    }
-
-    public static Observable<File> crop(final Context context, final Uri imageUri, final Uri outputUri, final Bitmap.CompressFormat format, final CropImageView info) {
-        return decodeExif(context, imageUri, outputUri).flatMap(new Func1<ExifInfo, Observable<File>>() {
+    public static Observable<File> crop(final Context context, final CropKitParams params, final CropImageView info) {
+        return decodeExif(context, params.inputUri, params.outputUri).flatMap(new Func1<ExifInfo, Observable<File>>() {
             @Override public Observable<File> call(ExifInfo exifInfo) {
                 final Drawable drawable = info.getDrawable();
 
@@ -52,7 +48,7 @@ public final class CropTask {
                 Log.d(TAG, String.format("Image size: [%d:%d]", (int) w, (int) h));
 
                 RectF initialImageRect = new RectF(0, 0, w, h);
-                return doCrop(context, info.getBaseBitmap(), info.getSelectedCropArea(), initialImageRect, format, imageUri, outputUri, exifInfo);
+                return doCrop(context, params, info, initialImageRect, exifInfo);
             }
         });
     }
@@ -95,15 +91,15 @@ public final class CropTask {
         },AsyncEmitter.BackpressureMode.NONE);
     }
 
-    private static Observable<File> doCrop(final Context context, final Bitmap bitmap, final RectF cropRect, final RectF currentImageRect, final Bitmap.CompressFormat format, final Uri inputUri, final Uri outputUri, final ExifInfo exifInfo) {
+    private static Observable<File> doCrop(final Context context, final CropKitParams params, final CropImageView info, final RectF currentImageRect, final ExifInfo exifInfo) {
         return Observable.fromEmitter(new Action1<AsyncEmitter<File>>() {
             @Override
             public void call(final AsyncEmitter<File> bitmapAsyncEmitter) {
-                final ImageState imageState = new ImageState(cropRect, currentImageRect, 1, 0);
-                final CropParameters cropParameters = new CropParameters(0, 0, format, 90, getPath(context, inputUri), getPath(context, outputUri), exifInfo);
-                new BitmapCropTask(bitmap, imageState, cropParameters, new BitmapCropCallback() {
+                final ImageState imageState = new ImageState(info.getSelectedCropArea(), currentImageRect, 1, 0);
+                final CropParameters cropParameters = new CropParameters(params.maxResultImageWidth, params.maxResultImageHeight, params.format, 90, getPath(context, params.inputUri), getPath(context, params.outputUri), exifInfo);
+                new BitmapCropTask(context, info.getBaseBitmap(), imageState, cropParameters, new BitmapCropCallback() {
                     @Override public void onBitmapCropped(@NonNull Uri resultUri, int imageWidth, int imageHeight) {
-                        bitmapAsyncEmitter.onNext(getFile(context, outputUri));
+                        bitmapAsyncEmitter.onNext(getFile(context, params.outputUri));
                         bitmapAsyncEmitter.onCompleted();
                     }
 
@@ -113,7 +109,6 @@ public final class CropTask {
                 }).execute();
             }
         }, AsyncEmitter.BackpressureMode.NONE);
-
     }
 
     public static File getFile(Context context, Uri uri) {

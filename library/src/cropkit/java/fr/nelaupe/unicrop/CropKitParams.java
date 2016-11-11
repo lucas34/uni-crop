@@ -32,6 +32,12 @@ public final class CropKitParams
     public float[] defaultCropPosition;
     private static final String DEFAULT_CROP_POSITION = PREFIX + "defaultCropPosition";
 
+    public int maxResultImageWidth;
+    private static final String MAX_RESULT_IMAGE_WIDTH = PREFIX + "maxResultImageWidth";
+
+    public int maxResultImageHeight;
+    private static final String MAX_RESULT_IMAGE_HEIGHT = PREFIX + "maxResultImageHeight";
+
     public Bundle create() {
         Bundle bundle = new Bundle();
         bundle.putInt(ASPECT_X, aspectX);
@@ -41,6 +47,8 @@ public final class CropKitParams
         bundle.putParcelable(OUPUT_URI, outputUri);
         bundle.putSerializable(FORMAT, format);
         bundle.putFloatArray(DEFAULT_CROP_POSITION , defaultCropPosition);
+        bundle.putInt(MAX_RESULT_IMAGE_HEIGHT, maxResultImageHeight);
+        bundle.putInt(MAX_RESULT_IMAGE_WIDTH, maxResultImageWidth);
         return bundle;
     }
 
@@ -53,6 +61,8 @@ public final class CropKitParams
         cropKitParams.outputUri = bundle.getParcelable(OUPUT_URI);
         cropKitParams.format = bundle.containsKey(FORMAT) ? (Bitmap.CompressFormat) bundle.getSerializable(FORMAT) : Bitmap.CompressFormat.JPEG;
         cropKitParams.defaultCropPosition = bundle.getFloatArray(DEFAULT_CROP_POSITION);
+        cropKitParams.maxResultImageWidth = bundle.getInt(MAX_RESULT_IMAGE_WIDTH);
+        cropKitParams.maxResultImageHeight = bundle.getInt(MAX_RESULT_IMAGE_HEIGHT);
         return cropKitParams;
     }
 
