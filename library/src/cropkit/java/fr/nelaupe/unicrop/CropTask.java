@@ -97,7 +97,7 @@ public final class CropTask {
             public void call(final AsyncEmitter<File> bitmapAsyncEmitter) {
                 final ImageState imageState = new ImageState(info.getSelectedCropArea(), currentImageRect, 1, 0);
                 final CropParameters cropParameters = new CropParameters(params.maxResultImageWidth, params.maxResultImageHeight, params.format, 90, getPath(context, params.inputUri), getPath(context, params.outputUri), exifInfo);
-                new BitmapCropTask(context, info.getBaseBitmap(), imageState, cropParameters, new BitmapCropCallback() {
+                new BitmapCropTask(info.getBaseBitmap(), imageState, cropParameters, new BitmapCropCallback() {
                     @Override public void onBitmapCropped(@NonNull Uri resultUri, int imageWidth, int imageHeight) {
                         bitmapAsyncEmitter.onNext(getFile(context, params.outputUri));
                         bitmapAsyncEmitter.onCompleted();
