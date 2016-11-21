@@ -9,34 +9,34 @@ import android.os.Bundle;
  */
 public final class CropKitParams
 {
-    private static final String PREFIX = "CROP_KIT_PARAMS_";
+    public static final String PREFIX = "CROP_KIT_PARAMS_";
 
     public int aspectX;
-    private static final String ASPECT_X = PREFIX + "aspectX";
+    public static final String ASPECT_X = PREFIX + "aspectX";
 
     public int aspectY;
-    private static final String ASPECT_Y = PREFIX + "aspectY";
+    public static final String ASPECT_Y = PREFIX + "aspectY";
 
     public boolean detectFace;
-    private static final String DETECT_FACE = PREFIX + "detectFace";
+    public static final String DETECT_FACE = PREFIX + "detectFace";
 
     public Uri inputUri;
-    private static final String INPUT_URI = PREFIX + "inputUri";
+    public static final String INPUT_URI = PREFIX + "inputUri";
 
     public Uri outputUri;
-    private static final String OUPUT_URI = PREFIX + "outputUri";
+    public static final String OUPUT_URI = PREFIX + "outputUri";
 
     public Bitmap.CompressFormat format;
-    private static final String FORMAT = PREFIX + "format";
+    public static final String FORMAT = PREFIX + "format";
 
     public float[] defaultCropPosition;
-    private static final String DEFAULT_CROP_POSITION = PREFIX + "defaultCropPosition";
+    public static final String DEFAULT_CROP_POSITION = PREFIX + "defaultCropPosition";
 
     public int maxResultImageWidth;
-    private static final String MAX_RESULT_IMAGE_WIDTH = PREFIX + "maxResultImageWidth";
+    public static final String MAX_RESULT_IMAGE_WIDTH = PREFIX + "maxResultImageWidth";
 
     public int maxResultImageHeight;
-    private static final String MAX_RESULT_IMAGE_HEIGHT = PREFIX + "maxResultImageHeight";
+    public static final String MAX_RESULT_IMAGE_HEIGHT = PREFIX + "maxResultImageHeight";
 
     public Bundle create() {
         Bundle bundle = new Bundle();
