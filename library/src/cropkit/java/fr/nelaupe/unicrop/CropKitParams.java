@@ -54,8 +54,8 @@ public final class CropKitParams
 
     public static CropKitParams restore(Bundle bundle) {
         CropKitParams cropKitParams = new CropKitParams();
-        cropKitParams.aspectX = bundle.getInt(ASPECT_X, 1);
-        cropKitParams.aspectY = bundle.getInt(ASPECT_Y, 1);
+        cropKitParams.aspectX = bundle.getInt(ASPECT_X, 0);
+        cropKitParams.aspectY = bundle.getInt(ASPECT_Y, 0);
         cropKitParams.detectFace = bundle.getBoolean(DETECT_FACE, false);
         cropKitParams.inputUri = bundle.getParcelable(INPUT_URI);
         cropKitParams.outputUri = bundle.getParcelable(OUPUT_URI);
