@@ -22,7 +22,7 @@ import com.yalantis.ucrop.util.BitmapLoadUtils;
 
 import java.io.File;
 
-import rx.AsyncEmitter;
+import rx.Emitter;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -54,8 +54,8 @@ public final class CropTask {
     }
 
     public static Observable<Bitmap> decode(final Context context, final Uri imageUri) {
-        return Observable.fromEmitter(new Action1<AsyncEmitter<Bitmap>>() {
-            @Override public void call(final AsyncEmitter<Bitmap> decodeAsyncEmitter) {
+        return Observable.fromEmitter(new Action1<Emitter<Bitmap>>() {
+            @Override public void call(final Emitter<Bitmap> decodeAsyncEmitter) {
                 int maxBitmapSize = BitmapLoadUtils.calculateMaxBitmapSize(context);
                 BitmapLoadUtils.decodeBitmapInBackground(context, imageUri, imageUri, maxBitmapSize, maxBitmapSize, new BitmapLoadCallback() {
                     @Override
@@ -70,45 +70,45 @@ public final class CropTask {
                     }
                 });
             }
-        },AsyncEmitter.BackpressureMode.NONE);
+        },Emitter.BackpressureMode.NONE);
     }
 
     private static Observable<ExifInfo> decodeExif(final Context context, final Uri imageUri, final Uri outputUri) {
-        return Observable.fromEmitter(new Action1<AsyncEmitter<ExifInfo>>() {
-            @Override public void call(final AsyncEmitter<ExifInfo> exifInfoAsyncEmitter) {
+        return Observable.fromEmitter(new Action1<Emitter<ExifInfo>>() {
+            @Override public void call(final Emitter<ExifInfo> exifInfoEmitter) {
                 final int maxBitmapSize = BitmapLoadUtils.calculateMaxBitmapSize(context);
                 BitmapLoadUtils.decodeBitmapInBackground(context, imageUri, outputUri, maxBitmapSize, maxBitmapSize, new BitmapLoadCallback() {
                     @Override public void onBitmapLoaded(@NonNull Bitmap bitmap, @NonNull ExifInfo exifInfo, @NonNull String imageInputPath, @Nullable String imageOutputPath) {
-                        exifInfoAsyncEmitter.onNext(exifInfo);
-                        exifInfoAsyncEmitter.onCompleted();
+                        exifInfoEmitter.onNext(exifInfo);
+                        exifInfoEmitter.onCompleted();
                     }
 
                     @Override public void onFailure(@NonNull Exception bitmapWorkerException) {
-                        exifInfoAsyncEmitter.onError(bitmapWorkerException);
+                        exifInfoEmitter.onError(bitmapWorkerException);
                     }
                 });
             }
-        },AsyncEmitter.BackpressureMode.NONE);
+        },Emitter.BackpressureMode.NONE);
     }
 
     private static Observable<File> doCrop(final Context context, final CropKitParams params, final CropImageView info, final RectF currentImageRect, final ExifInfo exifInfo) {
-        return Observable.fromEmitter(new Action1<AsyncEmitter<File>>() {
+        return Observable.fromEmitter(new Action1<Emitter<File>>() {
             @Override
-            public void call(final AsyncEmitter<File> bitmapAsyncEmitter) {
+            public void call(final Emitter<File> bitmapEmitter) {
                 final ImageState imageState = new ImageState(info.getSelectedCropArea(), currentImageRect, 1, 0);
                 final CropParameters cropParameters = new CropParameters(params.maxResultImageWidth, params.maxResultImageHeight, params.format, 90, getPath(context, params.inputUri), getPath(context, params.outputUri), exifInfo);
                 new BitmapCropTask(info.getBaseBitmap(), imageState, cropParameters, new BitmapCropCallback() {
                     @Override public void onBitmapCropped(@NonNull Uri resultUri, int imageWidth, int imageHeight) {
-                        bitmapAsyncEmitter.onNext(getFile(context, params.outputUri));
-                        bitmapAsyncEmitter.onCompleted();
+                        bitmapEmitter.onNext(getFile(context, params.outputUri));
+                        bitmapEmitter.onCompleted();
                     }
 
                     @Override public void onCropFailure(@NonNull Throwable t) {
-                        bitmapAsyncEmitter.onError(t);
+                        bitmapEmitter.onError(t);
                     }
                 }).execute();
             }
-        }, AsyncEmitter.BackpressureMode.NONE);
+        }, Emitter.BackpressureMode.NONE);
     }
 
     public static File getFile(Context context, Uri uri) {
