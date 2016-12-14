@@ -211,7 +211,6 @@ public class CropImageView extends ImageViewTouchBase
 
     @Override
     protected void zoomTo(float scale, float centerX, float centerY) {
-        Log.d("/!", "zoomTo " + scale);
         super.zoomTo(scale, centerX, centerY);
         for (HighlightView hv : mHighlightViews)
         {
@@ -222,7 +221,6 @@ public class CropImageView extends ImageViewTouchBase
 
     @Override
     protected void postTranslate(float deltaX, float deltaY) {
-        Log.d("/!", "postTranslate");
         super.postTranslate(deltaX, deltaY);
         for (HighlightView hv : mHighlightViews)
         {
@@ -553,8 +551,6 @@ public class CropImageView extends ImageViewTouchBase
         Rect imageRect = new Rect(0, 0, width, height);
 
         RectF cropRect = new RectF(rect);
-
-        Log.d("/!", "getImageViewMatrix() = " + getImageViewMatrix());
 
         HighlightView hv = new HighlightView(this, mHighlight);
         hv.setup(getImageViewMatrix(), imageRect, cropRect, mAspectX != 0 && mAspectY != 0);

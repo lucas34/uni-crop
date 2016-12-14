@@ -45,8 +45,6 @@ public final class CropTask {
                 float w = drawable.getIntrinsicWidth();
                 float h = drawable.getIntrinsicHeight();
 
-                Log.d(TAG, String.format("Image size: [%d:%d]", (int) w, (int) h));
-
                 RectF initialImageRect = new RectF(0, 0, w, h);
                 return doCrop(context, params, info, initialImageRect, exifInfo);
             }
