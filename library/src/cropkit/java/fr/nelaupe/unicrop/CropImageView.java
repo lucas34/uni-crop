@@ -134,7 +134,6 @@ public class CropImageView extends ImageViewTouchBase
     protected void onLayout(boolean changed, int left, int top, int right, int bottom)
     {
         super.onLayout(changed, left, top, right, bottom);
-        Log.d("/!", "onLayout");
         for (HighlightView hv : mHighlightViews)
         {
             hv.setMatrix(getImageMatrix());
@@ -533,8 +532,6 @@ public class CropImageView extends ImageViewTouchBase
         int y = (height - cropHeight) / 2;
 
         RectF cropRect = new RectF(x, y, x + cropWidth, y + cropHeight);
-
-        Log.d("/!", "getImageViewMatrix() = " + getImageViewMatrix());
 
         HighlightView hv = new HighlightView(this, mHighlight);
         hv.setup(getImageViewMatrix(), imageRect, cropRect, mAspectX != 0 && mAspectY != 0);
