@@ -18,7 +18,7 @@ import com.yalantis.ucrop.util.RectUtils;
 
 import java.io.File;
 
-import rx.functions.Action1;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by yunarta on 14/12/15.
@@ -51,7 +51,7 @@ public class MyCropKitFragment extends Fragment implements View.OnClickListener 
     }
 
     protected void setImageBitmap(final String path) {
-        CropTask.decode(getContext(), Uri.fromFile(new File(path))).subscribe(new Action1<Bitmap>() {
+        CropTask.decode(getContext(), Uri.fromFile(new File(path))).subscribe(new Consumer<Bitmap>() {
             @Override
             public void call(Bitmap bitmap) {
                 getCropKit().initWith(CropKitParams.restore(getArguments()));
@@ -65,7 +65,7 @@ public class MyCropKitFragment extends Fragment implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_save: {
-                CropTask.crop(getContext(), params, getCropKit()).subscribe(new Action1<File>() {
+                CropTask.crop(getContext(), params, getCropKit()).subscribe(new Consumer<File>() {
                     @Override
                     public void call(File file) {
                         params.defaultCropPosition = RectUtils.getCornersFromRect(getCropKit().getSelectedCropArea());

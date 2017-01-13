@@ -22,10 +22,15 @@ import com.yalantis.ucrop.util.BitmapLoadUtils;
 
 import java.io.File;
 
-import rx.Emitter;
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import io.reactivex.Emitter;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.internal.operators.observable.ObservableCache;
+import io.reactivex.internal.operators.observable.ObservableCreate;
 
 import static android.content.ContentValues.TAG;
 import static com.yalantis.ucrop.util.FileUtils.getPath;
@@ -38,8 +43,8 @@ import static com.yalantis.ucrop.util.FileUtils.getPath;
 public final class CropTask {
 
     public static Observable<File> crop(final Context context, final CropKitParams params, final CropImageView info) {
-        return decodeExif(context, params.inputUri, params.outputUri).flatMap(new Func1<ExifInfo, Observable<File>>() {
-            @Override public Observable<File> call(ExifInfo exifInfo) {
+        return decodeExif(context, params.inputUri, params.outputUri).flatMap(new Function<ExifInfo, ObservableSource<File>>() {
+            @Override public ObservableSource<File> apply(ExifInfo exifInfo) throws Exception {
                 final Drawable drawable = info.getDrawable();
 
                 float w = drawable.getIntrinsicWidth();
@@ -52,14 +57,14 @@ public final class CropTask {
     }
 
     public static Observable<Bitmap> decode(final Context context, final Uri imageUri) {
-        return Observable.fromEmitter(new Action1<Emitter<Bitmap>>() {
-            @Override public void call(final Emitter<Bitmap> decodeAsyncEmitter) {
+        return Observable.create(new ObservableOnSubscribe<Bitmap>() {
+            @Override public void subscribe(final ObservableEmitter<Bitmap> decodeAsyncEmitter) throws Exception {
                 int maxBitmapSize = BitmapLoadUtils.calculateMaxBitmapSize(context);
                 BitmapLoadUtils.decodeBitmapInBackground(context, imageUri, imageUri, maxBitmapSize, maxBitmapSize, new BitmapLoadCallback() {
                     @Override
                     public void onBitmapLoaded(@NonNull Bitmap bitmap, @NonNull ExifInfo exifInfo, @NonNull String imageInputPath, @Nullable String imageOutputPath) {
                         decodeAsyncEmitter.onNext(bitmap);
-                        decodeAsyncEmitter.onCompleted();
+                        decodeAsyncEmitter.onComplete();
                     }
 
                     @Override
@@ -67,18 +72,19 @@ public final class CropTask {
                         decodeAsyncEmitter.onError(bitmapWorkerException);
                     }
                 });
+
             }
-        },Emitter.BackpressureMode.NONE);
+        });
     }
 
     private static Observable<ExifInfo> decodeExif(final Context context, final Uri imageUri, final Uri outputUri) {
-        return Observable.fromEmitter(new Action1<Emitter<ExifInfo>>() {
-            @Override public void call(final Emitter<ExifInfo> exifInfoEmitter) {
+        return Observable.create(new ObservableOnSubscribe<ExifInfo>() {
+            @Override public void subscribe(final ObservableEmitter<ExifInfo> exifInfoEmitter) throws Exception {
                 final int maxBitmapSize = BitmapLoadUtils.calculateMaxBitmapSize(context);
                 BitmapLoadUtils.decodeBitmapInBackground(context, imageUri, outputUri, maxBitmapSize, maxBitmapSize, new BitmapLoadCallback() {
                     @Override public void onBitmapLoaded(@NonNull Bitmap bitmap, @NonNull ExifInfo exifInfo, @NonNull String imageInputPath, @Nullable String imageOutputPath) {
                         exifInfoEmitter.onNext(exifInfo);
-                        exifInfoEmitter.onCompleted();
+                        exifInfoEmitter.onComplete();
                     }
 
                     @Override public void onFailure(@NonNull Exception bitmapWorkerException) {
@@ -86,19 +92,18 @@ public final class CropTask {
                     }
                 });
             }
-        },Emitter.BackpressureMode.NONE);
+        });
     }
 
     private static Observable<File> doCrop(final Context context, final CropKitParams params, final CropImageView info, final RectF currentImageRect, final ExifInfo exifInfo) {
-        return Observable.fromEmitter(new Action1<Emitter<File>>() {
-            @Override
-            public void call(final Emitter<File> bitmapEmitter) {
+        return Observable.create(new ObservableOnSubscribe<File>() {
+            @Override public void subscribe(final ObservableEmitter<File> bitmapEmitter) throws Exception {
                 final ImageState imageState = new ImageState(info.getSelectedCropArea(), currentImageRect, 1, 0);
                 final CropParameters cropParameters = new CropParameters(params.maxResultImageWidth, params.maxResultImageHeight, params.format, 90, getPath(context, params.inputUri), getPath(context, params.outputUri), exifInfo);
                 new BitmapCropTask(info.getBaseBitmap(), imageState, cropParameters, new BitmapCropCallback() {
                     @Override public void onBitmapCropped(@NonNull Uri resultUri, int imageWidth, int imageHeight) {
                         bitmapEmitter.onNext(getFile(context, params.outputUri));
-                        bitmapEmitter.onCompleted();
+                        bitmapEmitter.onComplete();
                     }
 
                     @Override public void onCropFailure(@NonNull Throwable t) {
@@ -106,7 +111,7 @@ public final class CropTask {
                     }
                 }).execute();
             }
-        }, Emitter.BackpressureMode.NONE);
+        });
     }
 
     public static File getFile(Context context, Uri uri) {

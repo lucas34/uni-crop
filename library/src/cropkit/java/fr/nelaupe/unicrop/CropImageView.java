@@ -478,5 +478,5 @@ public class CropImageView extends ImageViewTouchBase
 
         return hv;
     }
-    
+
 }
