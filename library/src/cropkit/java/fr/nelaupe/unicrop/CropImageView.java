@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import it.sephiroth.android.library.imagezoom.*;
-import rx.Observable;
-import rx.functions.Action1;
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 
 public class CropImageView extends ImageViewTouchBase
 {
@@ -162,31 +162,6 @@ public class CropImageView extends ImageViewTouchBase
             mCrop = null;
             mWaitingToPick = true;
             center(true, true);
-
-            Observable.fromCallable(new FaceDetectorTask(this)).forEach(new Action1<List<HighlightView>>() {
-                @Override
-                public void call(List<HighlightView> views) {
-                    mWaitingToPick = views.size() > 1;
-                    if (!mWaitingToPick) {
-                        if (views.isEmpty()) {
-                            _add(createDefaultHighlight());
-                        } else {
-                            HighlightView hv = views.get(0);
-                            _add(hv);
-                        }
-                    } else {
-                        for (HighlightView hv : views) {
-                            _add(hv);
-                        }
-                    }
-
-                    invalidate();
-                    if (mHighlightViews.size() == 1) {
-                        mCrop = mHighlightViews.get(0);
-                        mCrop.setFocus(true);
-                    }
-                }
-            });
         }
         else
         {
@@ -451,57 +426,6 @@ public class CropImageView extends ImageViewTouchBase
         mHighlightViews.clear();
     }
 
-    // For each face, we create a HighlightView for it.
-//    private HighlightView createHighlightForFace(FaceDetector.Face f, float scale)
-//    {
-//        PointF midPoint = new PointF();
-//
-//        int r = ((int) (f.eyesDistance() * scale)) * 2;
-//
-//        f.getMidPoint(midPoint);
-//
-//        midPoint.x *= scale;
-//        midPoint.y *= scale;
-//
-//        int midX = (int) midPoint.x;
-//        int midY = (int) midPoint.y;
-//
-//        int width  = mImageBitmapResetBase.getWidth();
-//        int height = mImageBitmapResetBase.getHeight();
-//
-//        Rect imageRect = new Rect(0, 0, width, height);
-//
-//        RectF faceRect = new RectF(midX, midY, midX, midY);
-//        faceRect.inset(-r, -r);
-//
-//        if (faceRect.left < 0)
-//        {
-//            faceRect.inset(-faceRect.left, -faceRect.left);
-//        }
-//
-//        if (faceRect.top < 0)
-//        {
-//            faceRect.inset(-faceRect.top, -faceRect.top);
-//        }
-//
-//        if (faceRect.right > imageRect.right)
-//        {
-//            faceRect.inset(faceRect.right - imageRect.right, faceRect.right - imageRect.right);
-//        }
-//
-//        if (faceRect.bottom > imageRect.bottom)
-//        {
-//            faceRect.inset(faceRect.bottom - imageRect.bottom, faceRect.bottom - imageRect.bottom);
-//        }
-//
-//        Log.d("/!", "getImageViewMatrix() = " + getImageViewMatrix());
-//
-//        HighlightView hv = new HighlightView(this, mHighlight);
-//        hv.setup(getImageViewMatrix(), imageRect, faceRect, mAspectX != 0 && mAspectY != 0);
-//
-//        return hv;
-//    }
-
     // Create a default HightlightView if we found no face in the picture.
     private HighlightView createDefaultHighlight()
     {
@@ -554,68 +478,5 @@ public class CropImageView extends ImageViewTouchBase
 
         return hv;
     }
-
-    private static class FaceDetectorTask implements Callable<List<HighlightView>>
-    {
-        CropImageView mImageView;
-
-        public FaceDetectorTask(CropImageView imageView)
-        {
-            mImageView = imageView;
-        }
-
-        // Scale the image down for faster face detection.
-        private Pair<Bitmap, Float> prepareFaceBitmap()
-        {
-            Bitmap bitmap = mImageView.getBaseBitmap();
-            if (bitmap == null || bitmap.isRecycled())
-            {
-                return null;
-            }
-
-            // 256 pixels wide is enough.
-            float scale = 1;
-            if (bitmap.getWidth() > 256)
-            {
-                scale = 256.0F / bitmap.getWidth();
-            }
-
-            Matrix matrix = new Matrix();
-            matrix.setScale(scale, scale);
-
-            Bitmap faceBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            Bitmap b565       = faceBitmap.copy(Bitmap.Config.RGB_565, true);
-            if (b565 != faceBitmap) faceBitmap.recycle();
-
-            return new Pair<>(b565, scale);
-        }
-
-        public List<HighlightView> call() throws Exception
-        {
-            Pair<Bitmap, Float> pair = prepareFaceBitmap();
-            if (pair == null) throw new IllegalStateException();
-
-            Bitmap bitmap = pair.first;
-            float  scale  = 1.0F / pair.second;
-
-            FaceDetector.Face[] faces = new FaceDetector.Face[5];
-            int                 numFaces;
-
-            FaceDetector detector = new FaceDetector(bitmap.getWidth(), bitmap.getHeight(), faces.length);
-            numFaces = detector.findFaces(bitmap, faces);
-
-            bitmap.recycle();
-
-            List<HighlightView> hvs = new ArrayList<>();
-            if (numFaces != 0)
-            {
-                for (int i = 0; i < numFaces; i++)
-                {
-//                    hvs.add(mImageView.createHighlightForFace(faces[i], scale));
-                }
-            }
-
-            return hvs;
-        }
-    }
+    
 }
