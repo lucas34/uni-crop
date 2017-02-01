@@ -21,14 +21,15 @@ android {
         }
     }
 
-    lintOptions {
-        disable 'IconMissingDensityFolder'
-    }
-
     buildTypes {
         release {
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
 }
 
 configurations {
