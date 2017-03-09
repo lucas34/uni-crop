@@ -94,7 +94,7 @@ public final class CropTask {
         });
     }
 
-    private static Observable<File> doCrop(final Context context, final CropKitParams params, final CropImageView info, final RectF currentImageRect, final ExifInfo exifInfo) {
+    /* package */ static Observable<File> doCrop(final Context context, final CropKitParams params, final CropImageView info, final RectF currentImageRect, final ExifInfo exifInfo) {
         return Observable.create(new ObservableOnSubscribe<File>() {
             @Override
             public void subscribe(final ObservableEmitter<File> bitmapEmitter) throws Exception {
