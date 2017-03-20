@@ -53,7 +53,7 @@ public class MyCropKitFragment extends Fragment implements View.OnClickListener 
     protected void setImageBitmap(final String path) {
         CropTask.decode(getContext(), Uri.fromFile(new File(path))).subscribe(new Consumer<Bitmap>() {
             @Override
-            public void call(Bitmap bitmap) {
+            public void accept(Bitmap bitmap) throws Exception {
                 getCropKit().initWith(CropKitParams.restore(getArguments()));
                 getCropKit().setImageBitmap(bitmap);
                 getCropKit().invalidate();
@@ -67,7 +67,7 @@ public class MyCropKitFragment extends Fragment implements View.OnClickListener 
             case R.id.btn_save: {
                 CropTask.crop(getContext(), params, getCropKit()).subscribe(new Consumer<File>() {
                     @Override
-                    public void call(File file) {
+                    public void accept(File file) throws Exception {
                         params.defaultCropPosition = RectUtils.getCornersFromRect(getCropKit().getSelectedCropArea());
                         getArguments().putAll(params.create());
                         setImageBitmap(file.getAbsolutePath());
