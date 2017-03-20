@@ -37,7 +37,7 @@ public class CropImageView extends ImageViewTouchBase {
 
     private int mMotionEdge;
 
-    private List<HighlightView> mHighlightViews = new ArrayList<>();
+    private final List<HighlightView> mHighlightViews = new ArrayList<>();
 
     private HighlightView mCrop;
 
