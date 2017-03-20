@@ -11,6 +11,5 @@
         <attr name="cropKitAspectX" format="integer"/>
         <attr name="cropKitAspectY" format="integer"/>
         <attr name="cropKitCircleCrop" format="boolean"/>
-        <attr name="cropKitDetectFace" format="boolean"/>
     </declare-styleable>
 </resources>

@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
                         CropKitParams ckb = new CropKitParams();
                         ckb.aspectX = 3;
                         ckb.aspectY = 4;
-                        ckb.detectFace = true;
                         ckb.format = Bitmap.CompressFormat.JPEG;
                         ckb.inputUri = Uri.fromFile(result.get(0).getFile().getAbsoluteFile());
                         ckb.outputUri = Uri.fromFile(new File(getApplicationContext().getCacheDir().getAbsolutePath() + "/cropped.jpg").getAbsoluteFile());

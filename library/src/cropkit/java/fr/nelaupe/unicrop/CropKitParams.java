@@ -18,9 +18,9 @@ public final class CropKitParams {
     public static final String DEFAULT_CROP_POSITION = PREFIX + "defaultCropPosition";
     public static final String MAX_RESULT_IMAGE_WIDTH = PREFIX + "maxResultImageWidth";
     public static final String MAX_RESULT_IMAGE_HEIGHT = PREFIX + "maxResultImageHeight";
+
     public int aspectX;
     public int aspectY;
-    public boolean detectFace;
     public Uri inputUri;
     public Uri outputUri;
     public Bitmap.CompressFormat format;
@@ -32,7 +32,6 @@ public final class CropKitParams {
         CropKitParams cropKitParams = new CropKitParams();
         cropKitParams.aspectX = bundle.getInt(ASPECT_X, 0);
         cropKitParams.aspectY = bundle.getInt(ASPECT_Y, 0);
-        cropKitParams.detectFace = bundle.getBoolean(DETECT_FACE, false);
         cropKitParams.inputUri = bundle.getParcelable(INPUT_URI);
         cropKitParams.outputUri = bundle.getParcelable(OUPUT_URI);
         cropKitParams.format = bundle.containsKey(FORMAT) ? (Bitmap.CompressFormat) bundle.getSerializable(FORMAT) : Bitmap.CompressFormat.JPEG;
@@ -46,7 +45,6 @@ public final class CropKitParams {
         Bundle bundle = new Bundle();
         bundle.putInt(ASPECT_X, aspectX);
         bundle.putInt(ASPECT_Y, aspectY);
-        bundle.putBoolean(DETECT_FACE, detectFace);
         bundle.putParcelable(INPUT_URI, inputUri);
         bundle.putParcelable(OUPUT_URI, outputUri);
         bundle.putSerializable(FORMAT, format);

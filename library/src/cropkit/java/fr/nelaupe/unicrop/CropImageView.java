@@ -19,9 +19,8 @@ import java.util.List;
 import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 public class CropImageView extends ImageViewTouchBase {
-    private final LayerDrawable mHighlight;
 
-    private boolean mDoFaceDetection;
+    private final LayerDrawable mHighlight;
 
     private int mAspectX;
 
@@ -68,14 +67,12 @@ public class CropImageView extends ImageViewTouchBase {
 
         mAspectX = a.getInteger(R.styleable.CropImageView_cropKitAspectX, 0);
         mAspectY = a.getInteger(R.styleable.CropImageView_cropKitAspectY, 0);
-        mDoFaceDetection = a.getBoolean(R.styleable.CropImageView_cropKitDetectFace, false);
 
         a.recycle();
     }
 
     public void initWith(CropKitParams params) {
         setAspect(params.aspectX, params.aspectY);
-        setFaceDetection(params.detectFace);
         if (params.defaultCropPosition != null && RectUtils.trapToRect(params.defaultCropPosition).width() > 10 && RectUtils.trapToRect(params.defaultCropPosition).height() > 10) {
             setUserRect(RectUtils.trapToRect(params.defaultCropPosition));
         }
@@ -86,13 +83,8 @@ public class CropImageView extends ImageViewTouchBase {
         mAspectY = y;
     }
 
-    public void setFaceDetection(boolean enabled) {
-        mDoFaceDetection = enabled;
-    }
-
     public void setUserRect(RectF rect) {
         if (rect != null) {
-            mDoFaceDetection = false;
             mUserRect = rect;
         }
     }
@@ -133,23 +125,16 @@ public class CropImageView extends ImageViewTouchBase {
     private void setupView() {
         if (mImageBitmapResetBase == null) return;
 
-        mHighlightViews = new ArrayList<>();
-        if (mDoFaceDetection) {
-            mCrop = null;
-            mWaitingToPick = true;
-            center(true, true);
+        if (mUserRect != null) {
+            _add(createHighlight(mUserRect));
         } else {
-            if (mUserRect != null) {
-                _add(createHighlight(mUserRect));
-            } else {
-                _add(createDefaultHighlight());
-            }
+            _add(createDefaultHighlight());
+        }
 
-            invalidate();
-            if (mHighlightViews.size() == 1) {
-                mCrop = mHighlightViews.get(0);
-                mCrop.setFocus(true);
-            }
+        invalidate();
+        if (mHighlightViews.size() == 1) {
+            mCrop = mHighlightViews.get(0);
+            mCrop.setFocus(true);
         }
     }
 

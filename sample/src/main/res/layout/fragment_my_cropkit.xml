@@ -12,8 +12,7 @@
         android:layout_height="match_parent"
         app:cropKitAspectX="2"
         app:cropKitAspectY="1"
-        app:cropKitCircleCrop="false"
-        app:cropKitDetectFace="true"/>
+        app:cropKitCircleCrop="false"/>
 
     <Button
         android:layout_width="100dp"
