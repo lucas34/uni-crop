@@ -4,9 +4,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
-/**
- * Created by yunarta on 14/12/15.
- */
 public final class CropKitParams {
     public static final String PREFIX = "CROP_KIT_PARAMS_";
     public static final String ASPECT_X = PREFIX + "aspectX";

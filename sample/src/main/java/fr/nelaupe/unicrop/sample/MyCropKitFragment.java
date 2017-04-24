@@ -20,9 +20,6 @@ import java.io.File;
 
 import io.reactivex.functions.Consumer;
 
-/**
- * Created by yunarta on 14/12/15.
- */
 public class MyCropKitFragment extends Fragment implements View.OnClickListener {
 
     private CropKitParams params;
