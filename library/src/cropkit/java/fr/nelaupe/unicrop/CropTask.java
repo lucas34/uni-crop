@@ -29,11 +29,6 @@ import io.reactivex.functions.Function;
 
 import static com.yalantis.ucrop.util.FileUtils.getPath;
 
-/**
- * Created with IntelliJ
- * Created by lucas
- * Date 26/03/15
- */
 public final class CropTask {
 
     public static Observable<File> crop(final Context context, final CropKitParams params, final CropImageView info) {
