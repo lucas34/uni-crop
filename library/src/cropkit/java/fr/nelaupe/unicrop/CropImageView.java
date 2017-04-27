@@ -52,6 +52,7 @@ public class CropImageView extends ImageViewTouchBase {
 
         Drawable dHighlight = a.getDrawable(R.styleable.CropImageView_cropKitHighlight);
         if (!(dHighlight instanceof LayerDrawable)) {
+            a.recycle();
             throw new IllegalStateException("cropKitHightlight must be a layer-list");
         }
 
@@ -61,6 +62,7 @@ public class CropImageView extends ImageViewTouchBase {
         // validate layer list member
         for (int id : idCheck) {
             if (mHighlight.findDrawableByLayerId(id) == null) {
+                a.recycle();
                 throw new IllegalStateException("@id/" + getResources().getResourceEntryName(id) + " is not included in cropKitHightlight layer-list");
             }
         }
