@@ -1,6 +1,3 @@
-/**
- * Copyright
- */
 package fr.nelaupe.unicrop;
 
 import android.content.Context;
