@@ -91,7 +91,7 @@ public final class CropTask {
             @Override
             public void subscribe(final ObservableEmitter<File> bitmapEmitter) throws Exception {
                 final ImageState imageState = new ImageState(info.getSelectedCropArea(), currentImageRect, 1, 0);
-                final CropParameters cropParameters = new CropParameters(params.maxResultImageWidth, params.maxResultImageHeight, params.format, 90, getPath(context, params.inputUri), getPath(context, params.outputUri), exifInfo);
+                final CropParameters cropParameters = new CropParameters(params.maxResultImageWidth, params.maxResultImageHeight, params.format, 100, getPath(context, params.inputUri), getPath(context, params.outputUri), exifInfo);
                 new BitmapCropTask(info.getBaseBitmap(), imageState, cropParameters, new BitmapCropCallback() {
                     @Override
                     public void onBitmapCropped(@NonNull Uri resultUri, int imageWidth, int imageHeight) {
