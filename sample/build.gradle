@@ -21,6 +21,6 @@ android {
 }
 
 dependencies {
-    compile 'com.zendesk:belvedere:1.1.1.1'
-    compile project(':unicrop')
+    implementation 'com.zendesk:belvedere:1.1.1.1'
+    implementation project(':unicrop')
 }
