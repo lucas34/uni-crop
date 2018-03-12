@@ -127,10 +127,12 @@ public class CropImageView extends ImageViewTouchBase {
     private void setupView() {
         if (mImageBitmapResetBase == null) return;
 
-        if (mUserRect != null) {
-            _add(createHighlight(mUserRect));
-        } else {
-            _add(createDefaultHighlight());
+        if (mHighlightViews.size() == 0) {
+            if (mUserRect != null) {
+                _add(createHighlight(mUserRect));
+            } else {
+                _add(createDefaultHighlight());
+            }
         }
 
         invalidate();
@@ -351,10 +353,10 @@ public class CropImageView extends ImageViewTouchBase {
         Rect imageRect = new Rect(0, 0, width, height);
 
         // make the default size about 4/5 of the width or height
-        int cropWidth = Math.min(width, height) * 4 / 5;
+        int cropWidth = width; // Math.min(width, height) * 4 / 5;
 
         //noinspection SuspiciousNameCombination
-        int cropHeight = cropWidth;
+        int cropHeight = height; // cropWidth;
 
         if (mAspectX != 0 && mAspectY != 0) {
             if (mAspectX > mAspectY) {
